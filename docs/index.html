@@ -1,201 +1,248 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>동행 개인정보처리방침</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>동행: 교대 달력 — 교대근무 캘린더</title>
+<meta name="description" content="3교대, 4교대 등 복잡한 교대근무 일정을 한눈에. 근무 알림, 연차 관리, 친구와 휴무 비교까지 — 동행.">
 <style>
-  :root {
-    --bg: #FBF4F1;
-    --surface: #FFFFFF;
-    --ink: #2E2126;
-    --ink-soft: #6B5A5F;
-    --line: #EBDFDA;
-    --accent: #B23F5A;
-    --accent-soft: #F4DFE3;
+  :root{
+    --sky:#EFF5F9;
+    --blue:#2E7D9A;
+    --blue-dark:#215E75;
+    --ink:#20343D;
+    --ink-soft:#5C7682;
+    --card:#ffffff;
+    --border:#D6E4EA;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1A1315;
-      --surface: #241A1D;
-      --ink: #F3E7E9;
-      --ink-soft: #C6AEB3;
-      --line: #382A2D;
-      --accent: #E6899C;
-      --accent-soft: #3C262B;
-    }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Apple SD Gothic Neo","Malgun Gothic","Pretendard",-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--sky);color:var(--ink);line-height:1.6;
   }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
 
-  * { box-sizing: border-box; }
-  html, body { background: var(--bg); }
-  body {
-    margin: 0;
-    color: var(--ink);
-    font-family: 'Noto Sans KR', -apple-system, sans-serif;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
+  header{position:sticky;top:0;z-index:10;background:rgba(239,245,249,0.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;}
+  nav{display:flex;gap:28px;font-size:14px;font-weight:600;color:var(--ink-soft);}
+  nav a:hover{color:var(--blue-dark);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 22px;border-radius:12px;font-weight:700;font-size:15px;
+    background:var(--blue);color:#fff;
+    box-shadow:0 6px 16px rgba(46,125,154,0.35);
+    transition:transform .15s ease, box-shadow .15s ease;
   }
-  .page {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 64px 24px 96px;
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(46,125,154,0.4);}
+  .btn.ghost{background:transparent;color:var(--blue-dark);box-shadow:none;border:1.5px solid var(--blue);}
+
+  .hero{padding:88px 0 64px;}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;}
+  .eyebrow{display:inline-block;padding:6px 14px;border-radius:999px;background:#DCEBF1;color:var(--blue-dark);font-size:13px;font-weight:700;margin-bottom:20px;}
+  h1{font-size:44px;font-weight:900;letter-spacing:-0.02em;line-height:1.25;margin-bottom:20px;}
+  h1 .accent{color:var(--blue);}
+  .hero p.lead{font-size:17px;color:var(--ink-soft);margin-bottom:32px;max-width:480px;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+
+  .phone-mock{justify-self:center;width:280px;background:var(--ink);border-radius:36px;padding:14px;box-shadow:0 30px 60px rgba(32,52,61,0.35);}
+  .phone-screen{background:var(--sky);border-radius:24px;overflow:hidden;min-height:520px;}
+  .phone-topbar{background:var(--blue);color:#fff;padding:20px 18px 16px;font-weight:800;font-size:16px;}
+  .phone-topbar .sub{font-weight:500;font-size:12px;opacity:0.85;margin-top:2px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:14px;}
+  .cal-day{aspect-ratio:1;border-radius:8px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-soft);}
+  .cal-day.day{background:#FFD98E;color:#5C3C00;font-weight:800;}
+  .cal-day.night{background:var(--blue);color:#fff;font-weight:800;}
+  .cal-day.off{background:#DCEBF1;color:var(--blue-dark);font-weight:800;}
+  .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:0 14px 14px;}
+  .tag{background:#DCEBF1;color:var(--blue-dark);font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;}
+
+  section{padding:72px 0;}
+  .section-title{text-align:center;margin-bottom:52px;}
+  .section-title h2{font-size:30px;font-weight:900;margin-bottom:10px;}
+  .section-title p{color:var(--ink-soft);font-size:15px;}
+
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .feature-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;}
+  .feature-icon{width:48px;height:48px;border-radius:14px;background:#DCEBF1;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;}
+  .feature-card h3{font-size:17px;font-weight:800;margin-bottom:8px;}
+  .feature-card p{font-size:14px;color:var(--ink-soft);}
+
+  .how{background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .step{text-align:center;padding:0 8px;}
+  .step .num{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 14px;}
+  .step h4{font-size:15px;font-weight:800;margin-bottom:6px;}
+  .step p{font-size:13px;color:var(--ink-soft);}
+
+  .cta-final{text-align:center;}
+  .cta-final .wrap{background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:28px;padding:64px 32px;color:#fff;}
+  .cta-final h2{font-size:28px;font-weight:900;margin-bottom:12px;}
+  .cta-final p{opacity:0.9;margin-bottom:28px;font-size:15px;}
+  .cta-final .btn{background:#fff;color:var(--blue-dark);}
+  .cta-final .btn:hover{background:#fff;}
+
+  footer{padding:36px 0;border-top:1px solid var(--border);}
+  footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--ink-soft);}
+
+  @media (max-width:860px){
+    nav{display:none;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .phone-mock{order:-1;}
+    h1{font-size:34px;}
+    .features{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr 1fr;}
   }
-  header {
-    margin-bottom: 48px;
-  }
-  .eyebrow {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin: 0 0 12px;
-  }
-  h1 {
-    font-family: 'Noto Serif KR', serif;
-    font-weight: 700;
-    font-size: clamp(28px, 5vw, 38px);
-    line-height: 1.3;
-    margin: 0 0 14px;
-    text-wrap: balance;
-  }
-  .meta {
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin: 0;
-  }
-  .lede {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 20px 22px;
-    margin: 28px 0 0;
-    font-size: 15px;
-    color: var(--ink-soft);
-  }
-  section {
-    margin-top: 40px;
-  }
-  h2 {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 14px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  h2 .num {
-    color: var(--accent);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-  p { margin: 0 0 14px; font-size: 15.5px; }
-  ul { margin: 0 0 14px; padding-left: 1.3em; }
-  li { margin-bottom: 8px; font-size: 15.5px; }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin-bottom: 12px;
-  }
-  .card-title {
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .badge {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: var(--accent);
-  }
-  .card p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
-  hr {
-    border: none;
-    border-top: 1px solid var(--line);
-    margin: 48px 0 32px;
-  }
-  footer {
-    color: var(--ink-soft);
-    font-size: 13.5px;
-  }
-  a { color: var(--accent); }
 </style>
 </head>
 <body>
-<div class="page">
-  <header>
-    <p class="eyebrow">Privacy Policy</p>
-    <h1>동행 개인정보처리방침</h1>
-    <p class="meta">시행일: 2026년 8월 27일</p>
-    <div class="lede">
-      동행(Dongheng)은 별도의 서버 없이 기기 안에서만 동작하는 교대근무 캘린더 앱입니다.
-      입력하신 정보는 회원님의 기기를 벗어나지 않으며, 저희는 그 정보를 볼 수도 수집할 수도 없습니다.
+
+<header>
+  <div class="wrap">
+    <div class="brand">📅 동행</div>
+    <nav>
+      <a href="#features">기능</a>
+      <a href="#how">사용법</a>
+      <a href="#download">다운로드</a>
+    </nav>
+    <a class="btn" href="#download">앱 다운로드</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">교대근무 캘린더</span>
+      <h1>복잡한 교대근무,<br><span class="accent">동행</span>과 함께 관리하세요</h1>
+      <p class="lead">
+        3조 2교대, 3조 3교대, 4조 3교대, 주 5일 고정 근무는 물론 나만의 근무 사이클도 만들 수 있어요.
+        한 번 설정해두면 앞으로의 근무일이 자동으로 계산돼서 표시돼요.
+      </p>
+      <div class="cta-row">
+        <a class="btn" href="#download">지금 시작하기</a>
+        <a class="btn ghost" href="#features">기능 살펴보기</a>
+      </div>
     </div>
-  </header>
 
-  <section>
-    <h2><span class="num">01</span>수집하는 정보와 저장 방식</h2>
-    <p>동행은 계정 가입이나 로그인 없이 사용하는 앱입니다. 아래 정보는 전부 회원님의 기기 안(로컬 저장소)에만 저장되며, 어떤 서버로도 전송되지 않습니다.</p>
-    <ul>
-      <li>닉네임, 선택한 근무 패턴(교대 유형)</li>
-      <li>연차·반차 등록 내역</li>
-      <li>알림 켬/끔 설정, 화면 테마 설정</li>
-      <li>등록한 친구의 근무 패턴 정보(친구 이름 포함)</li>
-    </ul>
-    <p>앱을 삭제하면 위 정보는 기기에서 함께 삭제되며, 저희 쪽에 남는 사본은 없습니다.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">02</span>기기 권한 사용 목적</h2>
-    <div class="card">
-      <div class="card-title"><span class="badge">카메라</span>QR 코드로 친구 등록</div>
-      <p>친구가 보여주는 QR 코드를 스캔해 근무 패턴을 등록할 때만 카메라를 사용합니다. 사진이나 영상을 촬영·저장·전송하지 않으며, 스캔 화면을 벗어나면 카메라를 사용하지 않습니다.</p>
+    <div class="phone-mock">
+      <div class="phone-screen">
+        <div class="phone-topbar">
+          10월<br>
+          <span class="sub">3조 3교대 · 연차 2일 사용</span>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day day">D</div>
+          <div class="cal-day day">D</div>
+          <div class="cal-day night">N</div>
+          <div class="cal-day night">N</div>
+          <div class="cal-day off">休</div>
+          <div class="cal-day off">休</div>
+          <div class="cal-day">8</div>
+          <div class="cal-day">9</div>
+          <div class="cal-day day">D</div>
+          <div class="cal-day day">D</div>
+          <div class="cal-day night">N</div>
+          <div class="cal-day night">N</div>
+          <div class="cal-day off">休</div>
+          <div class="cal-day off">休</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">#근무알림</span>
+          <span class="tag">#QR 친구비교</span>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title"><span class="badge">알림</span>근무 일정 알림</div>
-      <p>주간·야간 근무, 친구와 겹치는 휴무 등을 알려주기 위해 기기 안에서 예약되는 로컬 알림만 사용합니다. 외부 푸시 서버를 거치지 않습니다.</p>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>교대근무, 더 이상 헷갈리지 않아요</h2>
+      <p>내 패턴에 맞춰 알아서 계산되는 근무 캘린더예요.</p>
     </div>
-  </section>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🗓</div>
+        <h3>나에게 맞는 근무 패턴</h3>
+        <p>3조 2교대, 3조 3교대, 4조 3교대, 주 5일 고정 근무는 물론, 나만의 근무 사이클도 만들 수 있어요.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏰</div>
+        <h3>놓치지 않는 근무 알림</h3>
+        <p>주간·오후·야간 근무가 시작되기 전에 알림을 보내드려요. 필요 없는 알림은 하나씩 꺼둘 수 있어요.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌴</div>
+        <h3>연차·반차도 캘린더에서</h3>
+        <p>날짜를 눌러서 연차나 반차를 바로 등록하고, 올해 사용한 연차 일수를 한눈에 확인하세요.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>친구랑 겹치는 휴무 찾기</h3>
+        <p>QR 코드로 친구를 등록하면, 서로 근무 패턴을 비교해서 같이 쉬는 날을 바로 찾아줘요.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>원하는 대로 꾸미는 화면</h3>
+        <p>라이트/다크 모드와 5가지 테마 색상을 자유롭게 조합해서 나만의 캘린더로 만들 수 있어요.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>기기에만 저장</h3>
+        <p>서버에 저장되는 정보는 없어요. 모든 데이터는 내 기기 안에만 남아요.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section>
-    <h2><span class="num">03</span>친구 등록(QR 공유)</h2>
-    <p>친구 등록은 서버를 거치지 않고 기기 대 기기로 이루어집니다. QR 코드에는 상대방의 근무 패턴을 계산하는 데 필요한 정보만 담겨 있으며, 이 정보는 QR을 보여준 사람이 직접 선택해 공유한 것입니다. 등록된 친구 정보는 회원님의 기기에만 저장되고, 삭제 기능으로 언제든 지울 수 있습니다.</p>
-  </section>
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-title">
+      <h2>시작은 간단해요</h2>
+      <p>한 번 설정해두면 계속 자동으로 계산돼요.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>근무 패턴 선택</h4>
+        <p>내 교대 방식을 고르거나 직접 만들어요.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>알림 설정</h4>
+        <p>근무 전 알려줄 시각을 정해요.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>연차 등록</h4>
+        <p>날짜를 눌러 연차·반차를 등록해요.</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h4>친구와 비교</h4>
+        <p>QR로 친구를 등록해 휴무를 맞춰봐요.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <section>
-    <h2><span class="num">04</span>제3자 제공 및 광고·분석</h2>
-    <p>동행은 사용자 데이터를 제3자에게 제공, 판매, 공유하지 않습니다. 현재 버전에는 광고 SDK나 분석(애널리틱스) SDK가 포함되어 있지 않습니다. 추후 광고를 도입할 경우, 이 방침을 갱신하고 스토어 등록정보에도 반영하겠습니다.</p>
-  </section>
+<section class="cta-final" id="download">
+  <div class="wrap">
+    <h2>교대근무로 매번 스케줄 확인하기 번거로우셨다면</h2>
+    <p>동행과 함께 관리해보세요.</p>
+    <a class="btn" href="https://play.google.com/store/apps/details?id=com.kakimind.shiftcalendar" target="_blank" rel="noopener">Google Play에서 다운로드</a>
+  </div>
+</section>
 
-  <section>
-    <h2><span class="num">05</span>아동의 개인정보</h2>
-    <p>동행은 특정 연령대를 대상으로 만들어진 앱이 아니며, 만 14세 미만 아동을 대상으로 개인정보를 별도로 수집하지 않습니다.</p>
-  </section>
+<footer>
+  <div class="wrap">
+    <span>© 2026 동행</span>
+    <span><a href="privacy.html" style="color:inherit;text-decoration:underline;">개인정보 처리방침</a></span>
+  </div>
+</footer>
 
-  <section>
-    <h2><span class="num">06</span>문의</h2>
-    <p>개인정보 처리에 관해 궁금한 점이 있으시면 아래 이메일로 연락해 주세요.</p>
-    <p><a href="mailto:kakimind@gmail.com">kakimind@gmail.com</a></p>
-  </section>
-
-  <hr>
-  <footer>
-    이 방침은 기능 변경에 따라 업데이트될 수 있으며, 변경 시 시행일을 갱신합니다.
-  </footer>
-</div>
 </body>
 </html>
