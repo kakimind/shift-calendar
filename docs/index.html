@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>동행: 교대 달력 — 교대근무 캘린더</title>
 <meta name="description" content="3교대, 4교대 등 복잡한 교대근무 일정을 한눈에. 근무 알림, 연차 관리, 친구와 휴무 비교까지 — 동행.">
+<link rel="icon" href="assets/icon.png">
 <style>
   :root{
     --sky:#EFF5F9;
@@ -27,6 +28,7 @@
   header{position:sticky;top:0;z-index:10;background:rgba(239,245,249,0.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
   header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;}
+  .brand img{width:32px;height:32px;border-radius:8px;}
   nav{display:flex;gap:28px;font-size:14px;font-weight:600;color:var(--ink-soft);}
   nav a:hover{color:var(--blue-dark);}
   .btn{
@@ -101,7 +103,7 @@
 
 <header>
   <div class="wrap">
-    <div class="brand">📅 동행</div>
+    <div class="brand"><img src="assets/icon.png" alt="동행 아이콘"> 동행</div>
     <nav>
       <a href="#features">기능</a>
       <a href="#how">사용법</a>
